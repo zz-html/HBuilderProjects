@@ -1,20 +1,22 @@
 <template>
 	<view class="content">
-		<view class="flex item-center" @click="open">
-			初始化
+		<view class="indexBtn" @click="open">
+			初始化蓝牙
 		</view>
-		<view class="flex item-center" @click="discovery">
-			搜索
+		<view>
+			目标蓝牙设备：{{ targetDeviceName }}、{{ targetDeviceName2 }}
+		</view>
+		<view class="indexBtn" @click="discovery">
+			搜索蓝牙设备
 		</view>	
-		<view class="flex item-center" @click="discoveryStop">
-			停止
+		<view class="indexBtn" @click="discoveryStop">
+			停止搜索蓝牙
 		</view>
-		
 		<view class="sendDiv">
 			<input type="text" placeholder="请输入发送内容" v-model="sendDataText" />
-			<view class="indexBtn" @click="sendData">
-				发送
-			</view>
+		</view>
+		<view class="indexBtn" @click="sendData">
+			发送
 		</view>
 		<view class="indexBtn" @click="msgList=[]">
 			清理消息
@@ -227,7 +229,7 @@
 	}
 	.indexBtn {
 		display: inline-block;
-		margin: auto;
+		margin: 12rpx auto;
 		border-radius: 16rpx;
 		border: 1px solid #ebedef;
 		text-align: center;
