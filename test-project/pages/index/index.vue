@@ -6,7 +6,7 @@
 				天气查询
 			</view>	
 			<view class="indexBtn" @click="goPage('/pages/bluetooth/bluetooth')">
-				蓝牙测试
+				蓝牙连接
 			</view>
 		</view>
 	</view>

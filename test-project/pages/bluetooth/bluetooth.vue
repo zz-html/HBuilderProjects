@@ -8,7 +8,10 @@
 		</view>
 		<view class="indexBtn" @click="discovery">
 			搜索蓝牙设备
-		</view>	
+		</view>
+		<view>
+			{{ discoveryMsg }}
+		</view>
 		<view class="indexBtn" @click="discoveryStop">
 			停止搜索蓝牙
 		</view>
@@ -39,6 +42,7 @@
 				characteristicId: null,
 				sendDataText: "",
 				msgList: [],
+				discoveryMsg: " ",
 			}
 		},
 		onLoad() {
@@ -64,10 +68,18 @@
 				});
 			},
 			// 解码 advertisData
-			decodeAdvertisData(advertisData) {
-				if (!advertisData) return '';
-				const buffer = new Uint8Array(advertisData);
-				return String.fromCharCode.apply(null, buffer);
+			decodeArrayBuffer(buffer) {
+			  try {
+				const uint8Array = new Uint8Array(buffer);
+				let result = '';
+				for (let i = 0; i < uint8Array.length; i++) {
+					result += String.fromCharCode(uint8Array[i]);
+				}
+				return '名称解码:'+result;
+			  } catch (error) {
+				console.error('解码失败:', error);
+				return '名称解码失败';
+			  }
 			},
 			discovery() {
 				uni.startBluetoothDevicesDiscovery({
@@ -83,9 +95,19 @@
 				// 监听发现新设备的事件
 				uni.onBluetoothDeviceFound((res) => {
 				  res.devices.forEach((device) => {
-					const name = device.name || device.localName || this.decodeAdvertisData(device.advertisData);
-					console.log('设备名称:', device.name, device.localName, this.decodeAdvertisData(device.advertisData), name); 
+					var name = '未知设备';
+					if (device.name && device.name!="") {
+					  name = device.name;
+					} else if (device.advertisData) {
+					  // 解码广播数据
+					  const decodedName = this.decodeArrayBuffer(device.advertisData);
+					  console.log('解码后的名称:', decodedName || '未知设备');
+					  name = decodedName;
+					} 					
+					console.log('设备名称:', name); 
+					console.log('设备device:', device); 
 					//this.msgList.push('设备名称' + name || '未知设备');
+					this.discoveryMsg = device.deviceId + " " + name;
 					if (name === this.targetDeviceName || name === this.targetDeviceName2) {
 						this.deviceId = device.deviceId;
 					    console.log('找到目标设备:', name, this.deviceId);
