@@ -9,11 +9,18 @@
 		<view class="flex item-center" @click="discoveryStop">
 			停止
 		</view>
-		<view class="flex item-center" @click="sendData">
-			发送
+		
+		<view class="sendDiv">
+			<input type="text" placeholder="请输入发送内容" v-model="sendDataText" />
+			<view class="indexBtn" @click="sendData">
+				发送
+			</view>
 		</view>
-		<view class="text-area">
-			<text class="title">{{title}}</text>
+		<view class="indexBtn" @click="msgList=[]">
+			清理消息
+		</view>
+		<view v-for="(msg, index) in msgList">
+			{{ msg }}
 		</view>
 	</view>
 </template>
@@ -22,12 +29,14 @@
 	export default {
 		data() {
 			return {
-				title: 'Helloz',
+				title: "",
 				targetDeviceName: "JDY-33-SPP",
 				targetDeviceName2: "JDY-33-BLE",
 				deviceId: null,
 				targetDeviceId: null,
-				characteristicId: null
+				characteristicId: null,
+				sendDataText: "",
+				msgList: [],
 			}
 		},
 		onLoad() {
@@ -37,15 +46,15 @@
 			open() {
 				uni.openBluetoothAdapter({
 				  success: (res) => {
-					this.title += '蓝牙模块初始化成功';
+					this.msgList.push('蓝牙模块初始化成功');
 				  },
 				  fail: (err) => {
 					console.log('蓝牙模块初始化失败', err)
-					this.title += '蓝牙模块初始化失败' + err.errMsg;
+					this.msgList.push('蓝牙模块初始化失败' + err.errMsg);
 					if (err.errCode === 10001) {
 					  uni.onBluetoothAdapterStateChange((state) => {
 						if (state.available) {
-						  this.title += '蓝牙模块已启用';
+						  this.msgList.push('蓝牙模块已启用');
 						}
 					  });
 					}
@@ -62,10 +71,10 @@
 				uni.startBluetoothDevicesDiscovery({
 					allowDuplicatesKey: false,
 					success: (res) => {
-						this.title += '开始搜索蓝牙设备';
+						this.msgList.push('开始搜索蓝牙设备');
 					},
 					fail: (err) => {
-						this.title += '搜索蓝牙设备失败' + err.errMsg;
+						this.msgList.push('搜索蓝牙设备失败' + err.errMsg);
 					},
 				});
 
@@ -73,10 +82,12 @@
 				uni.onBluetoothDeviceFound((res) => {
 				  res.devices.forEach((device) => {
 					const name = device.name || device.localName || this.decodeAdvertisData(device.advertisData);
-					console.log('设备名称:', name || '未知设备');
+					console.log('设备名称:', device.name, device.localName, this.decodeAdvertisData(device.advertisData), name); 
+					//this.msgList.push('设备名称' + name || '未知设备');
 					if (name === this.targetDeviceName || name === this.targetDeviceName2) {
 						this.deviceId = device.deviceId;
 					    console.log('找到目标设备:', name, this.deviceId);
+						this.msgList.push('找到目标设备:' + name);
 						// 停止搜索
 						this.discoveryStop();
 						this.connectToDevice(this.deviceId);
@@ -87,12 +98,12 @@
 			discoveryStop() {
 				uni.stopBluetoothDevicesDiscovery({
 				  success: (res) => {
-					//console.log('停止搜索成功', res);
-					this.title += '停止搜索成功';
+					console.log('停止搜索成功', res);
+					this.msgList.push('停止搜索成功');
 				  },
 				  fail: (err) => {
-					//console.error('停止搜索失败', err);
-					this.title += '停止搜索失败' + err.errMsg;
+					console.error('停止搜索失败', err);
+					this.msgList.push('停止搜索失败' + err.errMsg);
 				  },
 				});
 			},
@@ -106,6 +117,7 @@
 					},
 					fail: (err) => {
 						console.error('连接失败:', err);
+						this.msgList.push('连接失败');
 					}
 				});				
 			},
@@ -122,6 +134,7 @@
 				},
 				fail: (err) => {
 				  console.error('获取服务失败:', err);
+				  this.msgList.push('获取服务失败');
 				}
 			  });
 			},
@@ -136,6 +149,7 @@
 					},
 					fail: (err) => {
 					  console.error('获取特征值失败:', err);
+					  this.msgList.push('获取特征值失败');
 					}
 				});
 			},
@@ -157,6 +171,7 @@
 					console.log('接收到的数据:', receivedData);
 					const str = this.uint8ArrayToString(receivedData);
 					console.log('接收到的数据str:', str);
+					this.msgList.push('接收到的数据:' + str);
 				  });
 				},
 				fail: (err) => {
@@ -203,22 +218,23 @@
 		justify-content: center;
 	}
 
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50rpx;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
 	.title {
 		font-size: 36rpx;
 		color: #8f8f94;
+	}
+	.sendDiv {
+		width: 100%;
+	}
+	.indexBtn {
+		display: inline-block;
+		margin: auto;
+		border-radius: 16rpx;
+		border: 1px solid #ebedef;
+		text-align: center;
+		height: 50rpx;
+		line-height: 50rpx;
+		box-shadow: 0 4rpx #C5C5C5; /* 模拟按钮下方的立体效果 */
+		transition: all 0.2s ease;
+		padding: 0rpx 8rpx;
 	}
 </style>

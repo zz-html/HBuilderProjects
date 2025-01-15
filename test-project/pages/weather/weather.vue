@@ -79,7 +79,6 @@
 		font-size: 26rpx;
 		line-height: 40rpx;
 		height: 800rpx;
-		background-image: url('/static/0.jpg');
 		background-size: 100% 100%;
 		background-position: center;
 		background-repeat: no-repeat;
