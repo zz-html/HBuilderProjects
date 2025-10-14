@@ -9,6 +9,11 @@
 				蓝牙连接
 			</view>
 		</view>
+		<view class="btnContainer">
+			<view class="indexBtn" @click="goPage('/pages/pdf/pdf')">
+				pdf下载
+			</view>	
+		</view>
 	</view>
 </template>
 
@@ -53,6 +58,7 @@
   justify-content: space-between; /* 左右分布 */
   align-items: center; /* 垂直居中 */
   width: 100%;
+  margin-top: 30rpx;
 }
 
 .indexBtn {

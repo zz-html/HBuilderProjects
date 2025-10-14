@@ -17,6 +17,12 @@
 			"style": {
 				"navigationBarTitleText": "天气"
 			}
+		},
+		{
+			"path": "pages/pdf/pdf",
+			"style": {
+				"navigationBarTitleText": "pdf"
+			}
 		}
 	],
 	"globalStyle": {
