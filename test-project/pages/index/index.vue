@@ -14,6 +14,9 @@
 				{{ $t('pdfDownload') }}
 			</view>	
 		</view>
+		<view class="platformInfo">
+			{{ platform }}
+		</view>
 		<view class="langBtn" @click="changeLang()">
 			<view v-if="$i18n.locale === 'zh'">English</view>
 			<view v-else>中文</view>
@@ -25,10 +28,11 @@
 export default {
 	data() {
 		return {
-			title: 'Hello'
+			platform: null
 		}
 	},
 	onLoad() {
+	  this.platform = uni.getSystemInfoSync().uniPlatform; 
 	},
 	methods: {
 		goPage(url) {
@@ -83,6 +87,13 @@ export default {
 	line-height: 100rpx;
 	box-shadow: 0 4px #C5C5C5; /* 模拟按钮下方的立体效果 */
 	transition: all 0.2s ease;
+}
+.platformInfo {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 10rpx;
+	color: #d5d5d5;
 }
 .langBtn {
 	position: absolute;
