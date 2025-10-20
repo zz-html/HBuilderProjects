@@ -3,37 +3,49 @@
 		<image class="logo" src="/static/z.jpg"></image>
 		<view class="btnContainer">
 			<view class="indexBtn" @click="goPage('/pages/weather/weather')">
-				天气查询
+				{{ $t('weather') }}
 			</view>	
 			<view class="indexBtn" @click="goPage('/pages/bluetooth/bluetooth')">
-				蓝牙连接
+				{{ $t('bluetooth') }}
 			</view>
 		</view>
 		<view class="btnContainer">
 			<view class="indexBtn" @click="goPage('/pages/pdf/pdf')">
-				pdf下载
+				{{ $t('pdfDownload') }}
 			</view>	
+		</view>
+		<view class="langBtn" @click="changeLang()">
+			<view v-if="$i18n.locale === 'zh'">English</view>
+			<view v-else>中文</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				title: 'Hello'
-			}
+export default {
+	data() {
+		return {
+			title: 'Hello'
+		}
+	},
+	onLoad() {
+	},
+	methods: {
+		goPage(url) {
+			console.log("goPage", url);
+			uni.navigateTo({ url: url });
 		},
-		onLoad() {
-
-		},
-		methods: {
-			goPage(url) {
-				console.log("goPage");
-				uni.navigateTo({ url: url });
+		changeLang() {
+			const currentLang = this.$i18n.locale || "zh";
+			if (currentLang == "en") {
+				this.$i18n.locale = 'zh';
+			} else {
+				this.$i18n.locale = 'en';
 			}
+			uni.setStorageSync('lang', this.$i18n.locale);
 		}
 	}
+}
 </script>
 
 <style lang="scss" scoped>
@@ -72,5 +84,10 @@
 	box-shadow: 0 4px #C5C5C5; /* 模拟按钮下方的立体效果 */
 	transition: all 0.2s ease;
 }
-
+.langBtn {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 10rpx;
+}
 </style>

@@ -8,8 +8,8 @@
 		v-model="pdfUrl"
 	  />
 	</view>  
-    <button @click="downloadAndPreview" style="margin-top:20rpx">预览PDF</button>
-    <button @click="downloadAndSave" style="margin-top:20rpx">保存PDF(预览时，可点击右上角保存)</button>
+    <button @click="downloadAndPreview" style="margin-top:20rpx">PDF 预览</button>
+    <button @click="downloadAndSave" style="margin-top:20rpx">{{ $t('pdfDownload') }}(预览时，可点击右上角保存)</button>
 
     <view v-if="progressVisible">
       下载进度：{{progress}}%
